@@ -3,68 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://checkout.epayco.co/epayco.min.js"></script>
     <title>Generar Token :: ePayco</title>
   </head>
-  <body>
-    <form action="/pago" method="POST" id="customer-form">
+  <body class="container c">
+    <form id="customer-form">
       <!-- div donde se imprimiran los errores (opcional) -->
-      <div class="card-errors"></div>
-      <!-- datos necesarios para tokenizar -->
-      <div class="form-group">
-        <label> Nombre del usuario de tarjeta </label>
-        <input type="text" data-epayco="card[name]" />
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="text" data-epayco="card[email]" />
-      </div>
-      <div class="form-group">
-        <label> Número de la tarjeta de crédito </label>
-        <input type="text" data-epayco="card[number]" />
-      </div>
-      <div class="form-group">
-        <label>CVC</label>
-        <input type="text" size="4" data-epayco="card[cvc]" />
-      </div>
-      <div class="form-group">
-        <label>Mes de expiración(MM)</label>
-        <input type="text" data-epayco="card[exp_month]" />
-        <span>Año de expiración(AAAA)</span>
-        <input type="text" data-epayco="card[exp_year]" />
-      </div>
-      <!-- botón con la acción para enviar el formulario -->
-      <button type="submit">¡Pay!</button>
-    </form>
-    <script src="https://checkout.epayco.co/epayco.min.js"></script>
-    <script>
-      ePayco.setPublicKey("YOU_PUBLIC_API_KEY");
+      <div class="card mt-5">
+        <div class="card-body">
+          <div class="mb-1">
+            <label for="cardName" class="form-label">Card Name</label>
+            <input type="text" class="form-control" id="cardName" data-epayco="card[name]" value="">
+          </div>
+          <div class="mb-1">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="name@example.com" data-epayco="card[email]" value="">
+          </div>
+          <div class="mb-1">
+            <label for="cardNumber" class="form-label">Card Number</label>
+            <input type="number" class="form-control" id="cardNumber" data-epayco="card[number]" maxlength="16" value="">
+          </div>
 
-      $("#customer-form").submit(function (event) {
-        //detiene el evento automático del formulario
-        event.preventDefault();
-        //captura el contenido del formulario
-        var $form = $(this);
-        //deshabilita el botón para no acumular peticiones
-        $form.find("button").prop("disabled", true);
-        //hace el llamado al servicio de tokenización
-        ePayco.token.create($form, function (error, token) {
-          //habilita el botón al obtener una respuesta
-          $form.find("button").prop("disabled", false);
-          if (!error) {
-            //si la petición es correcta agrega un input "hidden" con el token como valor
-            $form.append(
-              $('<input type="hidden" name="epaycoToken">').val(token)
-            );
-            //envia el formulario para que sea procesado
-            $form.get(0).submit();
-          } else {
-            //muestra errores que hayan sucedido en la transacción
-            $(".customer-errors").text(error.data.description);
-          }
-        });
-      });
-    </script>
-    <script src="https://cdnjs.com/libraries/jquery/"></script>
+          <div class="row mb-1">
+            <div class="col-12 col-sm-4">
+              <label for="cardCvv" class="form-label">Card CVV</label>
+              <input type="number" class="form-control" id="cardCvv" data-epayco="card[cvc]" maxlength="4" value="">
+            </div>
+            <div class="col-6 col-sm-4">
+              <label for="cardMonth" class="form-label">Card Month</label>
+              <input type="number" class="form-control" id="cardMonth" data-epayco="card[exp_month]" maxlength="2" value="">
+            </div>
+            <div class="col-6 col-sm-4">
+              <label for="cardYear" class="form-label">Card Year</label>
+              <input type="number" class="form-control" id="cardYear" data-epayco="card[exp_year]" maxlength="4" value="">              
+            </div>
+          </div>
+          <!-- botón con la acción para enviar el formulario -->
+          <button class="btn btn-dark" type="submit">¡Pay!</button>
+
+        </div>
+      </div>
+      <div class="customer-errors"></div>
+
+      <!-- datos necesarios para tokenizar -->
+    </form>
+    <script src="./token.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
   </body>
 </html>
